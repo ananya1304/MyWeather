@@ -3,6 +3,7 @@ package com.example.myweather;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +44,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         {
             int position = retViewHolder.getAdapterPosition();
             if(mTwoPane){
+                Bundle arguments = new Bundle();
+                arguments.putString("date", mValues.get(position).get("date"));
+                arguments.putString("city", mValues.get(position).get("city"));
                 WeatherDetailFragment fragment = new WeatherDetailFragment();
+                fragment.setArguments(arguments);
                 ((AppCompatActivity) mParentActivity).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.weather_detail_container, fragment)
                         .commit();
@@ -49,6 +56,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
             else{
                 Context context = view.getContext();
                 Intent intent = new Intent(context, WeatherDetailActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("city",mValues.get(position).get("city") );
+                extras.putString("date", mValues.get(position).get("date"));
+                intent.putExtras(extras);
                 context.startActivity(intent);
             }
         }
@@ -67,11 +78,19 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
 
         holder.date.setText(song.get("date"));
         holder.temp.setText(song.get("temp"));
-        //holder.icon.setImageIcon(song.get("icon"));
+        String iconUrl = "http://openweathermap.org/img/w/" + song.get("icon") + ".png";
+        Picasso.with(mParentActivity).load(iconUrl).into(holder.icon);
+
     }
 
     @Override
     public int getItemCount(){return mValues.size();}
+
+    public void clear() {
+        int size = mValues.size();
+        mValues.clear();
+        notifyItemRangeRemoved(0, size);
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         final TextView date;

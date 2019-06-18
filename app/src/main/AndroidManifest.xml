@@ -31,8 +31,7 @@
         <provider
             android:authorities="com.example.myweather"
             android:name=".WeatherProvider"></provider>
-        <service android:name=".CurrentLocationService"></service>
-        <service android:name=".ForecastService"></service>
+        <service android:name=".WeatherService"></service>
     </application>
 
 </manifest>

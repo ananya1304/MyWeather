@@ -15,7 +15,11 @@ public class WeatherDetailActivity extends AppCompatActivity {
 
         if(savedInstanceState == null)
         {
+            Bundle arguments = new Bundle();
+            arguments.putString("city", getIntent().getStringExtra("city"));
+            arguments.putString("date", getIntent().getStringExtra("date"));
             WeatherDetailFragment fragment = new WeatherDetailFragment();
+            fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.news_detail_container, fragment)
                     .commit();
